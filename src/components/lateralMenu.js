@@ -7,7 +7,7 @@ import { Calendar, Apps, Person, DocumentText, BarChart } from '@styled-icons/io
 
 
 const Wrapper = styled.section`
-  height: 100vh;
+  height: 100%;
   background: #6851D8;
   width: 70px;
 

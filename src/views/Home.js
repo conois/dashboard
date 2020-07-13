@@ -4,8 +4,11 @@ import styled from 'styled-components';
 import { StyledIconBase } from '@styled-icons/styled-icon';
 import { MailOpen, Bed, Card } from '@styled-icons/ionicons-outline';
 import Modal from '../components/Modal';
+import BoxNotification from '../components/Home/BoxNotification';
 
-import { getHotelsInformation } from './actions/Home';
+import { getHotelsInformation } from './actions/HotelsActions';
+import { getMessagesList } from './actions/MessagesActions';
+
 
 const WrapperHome = styled.div`
     display: grid;
@@ -14,18 +17,16 @@ const WrapperHome = styled.div`
     grid-row-gap: 0px;
     justify-items: stretch;
     align-items: stretch;
+
+    @media (max-width: 768px) {
+        display: flex;
+    }
 `;
 const Notification = styled.section`
     background: #fff;
     margin-top: 30px;
     box-shadow: 2px 4px 11px -1px rgba(115, 110, 110, 0.97);
     padding: 10px;
-
-    & > div {
-        border: 1px solid #ccc;
-        padding: 10px;
-        border-radius: 6px;
-    }
 `;
 const Bienvenidos = styled.div`
     margin-top: 30px;
@@ -44,22 +45,6 @@ const Bienvenidos = styled.div`
     }
 `;
 
-const BoxNotification = styled.div`
-    & > div {
-        display: flex;
-        justify-content: space-between;
-        align-items: unset;
-    }
-    & > div > p {
-        margin: 3px;
-    }
-    & > h4 {
-        margin: 0;
-    }
-    & > p {
-        margin: 5px 0;
-    }
-`;
 const ListHome = styled.div`
     height: 80px;
     background-color: #fff;
@@ -153,13 +138,28 @@ const IconStyleWrapper = styled.div`
 `;
 
 const mapStateToProps = (state) => {
-    const { hotels } = state;
+    const { infoHotels : { hotels, errorHotels, loadingHotels} } = state;
+    const { infoMessages : { messages, errorMessages, loadingMessages} } = state;
+
     return {
         hotels,
+        errorHotels,
+        loadingHotels,
+        messages,
+        errorMessages,
+        loadingMessages,
     }
 };
 
-const Home = ({dispatch, hotels}) => {
+const Home = ({
+    dispatch,
+    hotels,
+    errorHotels,
+    loadingHotels,
+    messages,
+    errorMessages,
+    loadingMessages,
+}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [activeElement, setActiveElement] = useState({});
 
@@ -179,12 +179,16 @@ const Home = ({dispatch, hotels}) => {
     ];
 
     const HotelInfoBox = (hotel, center, size) => {
-        return (
-            <HotelInfo centerContent={center} inherit={size}>
-                <p>{hotel.nombre}</p>
-                <button onClick={handleButtonReserve(hotel)}>Reservar</button>
-            </HotelInfo>
-        );
+        if (hotel && hotel.information) {
+            const {information : { company_name }} = hotel;
+            return (
+                <HotelInfo centerContent={center} inherit={size}>
+                    <p>{company_name}</p>
+                    <button onClick={handleButtonReserve(hotel)}>Reservar</button>
+                </HotelInfo>
+            );
+        }
+        return null;
     };
 
     const renderContentModal = () => {
@@ -201,16 +205,16 @@ const Home = ({dispatch, hotels}) => {
 
     /* renderizado de notificaciones */
     const renderPendingMessage = () => {
-        return (
-            <BoxNotification>
-                <div>
-                    <MailOpen size="40"/>
-                    <p>02-Abril</p>     
-                </div>
-                <h4>Miguel Ruiz</h4>
-                <p>Lorem ipsum dolor sit amet. Consequatur, tempore?</p>
-            </BoxNotification>
-        );
+        if (messages && messages.length) {
+            const listMessages = messages.map(message => {
+                return (
+                    <BoxNotification dispatch={dispatch} id={message.id} name={message.email} comment={message.body}/>
+                );
+            });
+            return listMessages;
+        } else if (errorMessages) {
+            return <p>Error al cargar los mensajes</p>
+        }
     };
 
     /* render servicios */
@@ -237,61 +241,44 @@ const Home = ({dispatch, hotels}) => {
 
     const renderHotels = () => {
         // Crear un selector de los primeros 5 elementos del arreglo.
-        // TODO : traer hoteles desde un mock
-        const hotels = [
-            {   
-                id: 1,
-                nombre: "Nombre del Hotel",
-                estado: "disponible",
-            },
-            {
-                id: 2,
-                nombre: "Nombre del Hotel",
-                estado: "disponible",
-            },
-            {
-                id: 3,
-                nombre: "Nombre del Hotel",
-                estado: "disponible",
-            },
-            {
-                id:4,
-                nombre: "Nombre del Hotel",
-                estado: "disponible",
-            },
-            {
-                id: 5,
-                nombre: "Nombre del Hotel",
-                estado: "disponible",
-            },
-        ];
-
         const first = [];
         const second = [];
 
-        hotels.map((hotel, index) => {
-            const element = HotelInfoBox(hotel);
-            if (index < 3) {
-                return first.push(element);
-            } else {
-                return second.push(element);
-            }
-        });
-
-        return (
-            <div className="lt-grid-container">
-                <div className="lt-FirstRow ">
-                    {first}
+        if (hotels && hotels.length) {
+            hotels.map((hotel, index) => {
+                const element = HotelInfoBox(hotel);
+                if (index > 4) {
+                    return;
+                }
+                if (index < 3) {
+                    return first.push(element);
+                } else {
+                    return second.push(element);
+                }
+            });
+            return (
+                <div className="lt-grid-container">
+                    <div className="lt-FirstRow ">
+                        {first}
+                    </div>
+                    <div className="lt-SecondRow">
+                        {second}
+                    </div>
                 </div>
-                <div className="lt-SecondRow">
-                    {second}
+            );
+        } else if (errorHotels) {
+            return (
+                <div>
+                    <p> Ha ocurrido un error al cargar los hoteles </p>
                 </div>
-            </div>
-        );
+            );
+        }
     };
+
 
     useEffect(() => {
         dispatch(getHotelsInformation());
+        dispatch(getMessagesList());
     }, [dispatch]);
 
     return (
@@ -307,7 +294,7 @@ const Home = ({dispatch, hotels}) => {
                     {renderListServices(arrayServices)}
                 <Hoteles>
                     <h2>Hoteles Disponibles</h2>
-                    {renderHotels()}
+                    {renderHotels(hotels)}
                 </Hoteles>
             </div>
             <Notification>

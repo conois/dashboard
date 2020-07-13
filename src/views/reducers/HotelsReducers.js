@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import {
     SET_LOADING_HOTELS,
     SET_HOTELS,
@@ -33,8 +34,9 @@ const setLoadingHotelReducer = (state = false, action) => {
 };
 
 
-export {
-    setHotelsReducer,
-    setErrorHotelsReducer,
-    setLoadingHotelReducer,
-}
+
+export default combineReducers({
+    hotels: setHotelsReducer,
+    errorHotels: setErrorHotelsReducer,
+    loadingHotels: setLoadingHotelReducer,
+});

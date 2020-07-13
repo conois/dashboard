@@ -5,7 +5,7 @@ const url_get_hotels = "https://app.fakejson.com/q/Ny9dg9SL?token=YJGgd00fu0-O0b
 
 const getHotels = async () => {
     const resp = await fetch(`${url_get_hotels}`, { method: HTTP_METHODS.GET });
-    return await resp.json();
+    return resp;
 };
 
 export { getHotels };

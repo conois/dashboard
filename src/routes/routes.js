@@ -19,6 +19,7 @@ import AppsView from '../views/Apps';
 import UserView from '../views/Users';
 import ReportsView from '../views/Reports';
 import GraphicsView from '../views/Graphics';
+import MessagesView from '../views/Messages';
 
 const WrapperDash = styled.section`
     display: grid;
@@ -82,7 +83,7 @@ const RoutesContainer = () => {
                             <GraphicsView />
                         </Route>
                         <Route path="/messages">
-                            <GraphicsView />
+                            <MessagesView />
                         </Route>
                         <Route path="/settings">
                             <GraphicsView />
