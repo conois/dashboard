@@ -5,7 +5,10 @@ import styled from 'styled-components';
 import { clearMessageActive, getMessagesList, setMessageActive } from './actions/MessagesActions';
 
 const WrapperMessages = styled.div`
-    margin-top: 50px;
+    background: #fff;
+    padding: 50px;
+    box-shadow: 2px 4px 11px -1px rgba(115, 110, 110, 0.97);
+    margin: 50px 0;
 
     & button {
         height: 40px:
