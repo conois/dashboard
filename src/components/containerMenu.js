@@ -16,8 +16,6 @@ const WrapperMenu = styled.div`
     justify-content: space-between;
     box-shadow: 2px 4px 11px -1px rgba(115, 110, 110, 0.97);
 `;
-
-
 const ListMenuDashboard = styled.ul`
     list-style: none;
     margin: 0;
@@ -46,7 +44,7 @@ const IconStyleWrapper = styled.div`
 const ContainerMenu = () => {
     const itemsMenu = [
         {
-            path: '/search',
+            path: '/calendar',
             icon: <Calendar size="30"/>,
         },
         {

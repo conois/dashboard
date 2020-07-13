@@ -20,6 +20,8 @@ import UserView from '../views/Users';
 import ReportsView from '../views/Reports';
 import GraphicsView from '../views/Graphics';
 import MessagesView from '../views/Messages';
+import SearchView from '../views/Search';
+import SettingsView from '../views/Settings';
 
 const WrapperDash = styled.section`
     display: grid;
@@ -80,13 +82,13 @@ const RoutesContainer = () => {
                             <GraphicsView />
                         </Route>
                         <Route path="/search">
-                            <GraphicsView />
+                            <SearchView />
                         </Route>
                         <Route path="/messages">
                             <MessagesView />
                         </Route>
                         <Route path="/settings">
-                            <GraphicsView />
+                            <SettingsView />
                         </Route>
                     </Switch>
                 </WrapperContainer>

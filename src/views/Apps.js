@@ -1,8 +1,12 @@
 import React from 'react';
+import { BasicWrapper } from '../components/GridComponents/Grid';
+
 
 const Apps = () => {
     return (
-        <div> Apps </div>
+        <BasicWrapper>
+            <h2>Apps View</h2>
+        </BasicWrapper>
     )
 };
 

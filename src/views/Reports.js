@@ -1,8 +1,12 @@
 import React from 'react';
+import { BasicWrapper } from '../components/GridComponents/Grid';
+
 
 const Reports = () => {
     return (
-        <div> Reports </div>
+        <BasicWrapper>
+            <h2>Reports</h2>
+        </BasicWrapper>
     )
 };
 

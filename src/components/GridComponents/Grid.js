@@ -7,7 +7,15 @@ const Container = styled.div`
     box-sizing: border-box;
     overflow-y: hidden;
 `
+const BasicWrapper = styled.div`
+    height: 1000px;
+    background: #fff;
+    padding: 50px;
+    box-shadow: 2px 4px 11px -1px rgba(115, 110, 110, 0.97);
+    margin: 50px 0;
+`;
 
 export {
-    Container
+    Container,
+    BasicWrapper,
 }
